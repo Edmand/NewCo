@@ -8,6 +8,10 @@ using Microsoft.AspNetCore.SpaServices.Webpack;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.EntityFrameworkCore;
+using NewCo.Persistence;
+using AutoMapper;
+using NewCo.Core;
 
 namespace WebApplicationBasic
 {
@@ -28,6 +32,16 @@ namespace WebApplicationBasic
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // Add Dependency Injection configurations.
+            services.AddScoped<IAccountRepository, AccountRepository>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
+            
+            // Add Third-party configurations.
+            services.AddAutoMapper();
+
+            // Add DbContext configurations.
+            services.AddDbContext<NewCoDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("Default")));
+
             // Add framework services.
             services.AddMvc();
         }
